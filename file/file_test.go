@@ -23,19 +23,34 @@ func TestCopy(t *testing.T) {
 	assert.NoError(t, err)
 	dstPath := dst.Name()
 	dst.Close()
-	os.Remove(dstPath) // Remove to test creation
+	os.Remove(dstPath)
 
-	// Use file.Copy
-	err = Copy(src.Name(), dstPath)
-	assert.NoError(t, err)
+	t.Run("Should copy and keep origin file mode", func(t *testing.T) {
+		defer os.Remove(dstPath)
+		err = Copy(src.Name(), dstPath)
+		assert.NoError(t, err)
 
-	// Read and verify contents
-	copied, err := os.ReadFile(dstPath)
-	assert.NoError(t, err)
-	assert.Equal(t, data, copied, "Copied file contents should match source")
+		copied, err := os.ReadFile(dstPath)
+		assert.NoError(t, err)
+		assert.Equal(t, data, copied, "Copied file contents should match source")
 
-	// Check file permissions
-	srcInfo, _ := os.Stat(src.Name())
-	dstInfo, _ := os.Stat(dstPath)
-	assert.Equal(t, srcInfo.Mode(), dstInfo.Mode(), "File modes should match")
+		srcInfo, _ := os.Stat(src.Name())
+		dstInfo, _ := os.Stat(dstPath)
+		assert.Equal(t, srcInfo.Mode(), dstInfo.Mode(), "File modes should match")
+	})
+
+	t.Run("Should copy and change file to custom mode", func(t *testing.T) {
+		defer os.Remove(dstPath)
+		customMode := os.FileMode(0654)
+		opts := WithFileMode(customMode)
+		err = Copy(src.Name(), dstPath, opts)
+		assert.NoError(t, err)
+
+		copied, err := os.ReadFile(dstPath)
+		assert.NoError(t, err)
+		assert.Equal(t, data, copied, "Copied file contents should match source")
+
+		dstInfo, _ := os.Stat(dstPath)
+		assert.Equal(t, dstInfo.Mode(), customMode, "File modes should match")
+	})
 }
