@@ -1,6 +1,6 @@
-# Candango fsok
+# Candango iook
 
-Candango **fsok** is a Go library designed to make file and directory
+Candango **iook** is a Go library designed to make file and directory
 operations simple, reliable, and idiomatic. It provides helpers for common
 tasks such as checking existence, copying directories, and working with files —
 all with Go best practices in mind.
@@ -10,13 +10,13 @@ all with Go best practices in mind.
 Use `go get` to install:
 
 ```sh
-go get github.com/candango/fsok
+go get github.com/candango/iook
 ```
 
 Then import in your code:
 
 ```go
-import "github.com/candango/fsok"
+import "github.com/candango/iook"
 ```
 
 ## Usage
@@ -24,7 +24,7 @@ import "github.com/candango/fsok"
 ### Check if a directory exists
 
 ```go
-import "github.com/candango/fsok/dir"
+import "github.com/candango/iook/dir"
 
 if dir.Exists("/tmp/mydir") {
     // Directory exists
@@ -34,7 +34,7 @@ if dir.Exists("/tmp/mydir") {
 ### Copy all contents of a directory
 
 ```go
-import "github.com/candango/fsok/dir"
+import "github.com/candango/iook/dir"
 
 err := dir.CopyAll("source", "destination")
 if err != nil {
@@ -45,7 +45,7 @@ if err != nil {
 ### Check if a file exists
 
 ```go
-import "github.com/candango/fsok/file"
+import "github.com/candango/iook/file"
 
 if file.Exists("myfile.txt") {
     // File exists
