@@ -6,10 +6,10 @@ import (
 )
 
 type CopyOptions struct {
-	Force bool
-	Group int
-	Mode  *os.FileMode
-	User  int
+	Force    bool
+	Group    int
+	FileMode *os.FileMode
+	User     int
 }
 
 type CopyOption func(*CopyOptions)
@@ -23,7 +23,7 @@ func WithGroup(g int) CopyOption {
 }
 
 func WithFileMode(m os.FileMode) CopyOption {
-	return func(o *CopyOptions) { o.Mode = &m }
+	return func(o *CopyOptions) { o.FileMode = &m }
 }
 
 // Copy copies a regular file from src to dst, preserving its content and
@@ -33,7 +33,7 @@ func WithFileMode(m os.FileMode) CopyOption {
 //
 // Example usage:
 //
-//	opts := file.WithMode(0654)
+//	opts := file.WithFileMode(0654)
 //	err := file.Copy("foo.txt", "bar.txt", opts)
 //	if err != nil {
 //	    log.Fatal(err)
@@ -41,8 +41,8 @@ func WithFileMode(m os.FileMode) CopyOption {
 func Copy(src, dst string, opts ...CopyOption) error {
 	// Default options
 	options := &CopyOptions{
-		Mode:  nil,
-		Force: false,
+		FileMode: nil,
+		Force:    false,
 	}
 	for _, opt := range opts {
 		opt(options)
@@ -77,8 +77,8 @@ func Copy(src, dst string, opts ...CopyOption) error {
 		return err
 	}
 	fileMode := fi.Mode()
-	if options.Mode != nil {
-		fileMode = *options.Mode
+	if options.FileMode != nil {
+		fileMode = *options.FileMode
 	}
 
 	return os.Chmod(dst, fileMode)
